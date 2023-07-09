@@ -16,6 +16,22 @@ jobs:
         ref: ${{github.head_ref}}
         fetch-depth: 0
         repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
+
+    - name: Docker Login
+      run: docker login -u ${{secrets.DOCKER_USER}} -p ${{secrets.DOCKER_PASSWORD}}
+
     - name: Build
       # Build JasmineGraph docker image
       run: docker build -t jasminegraph-prereq .
+
+    - name: Docker Push Latest
+      if: github.event_name == 'push'
+      run: |
+        docker tag jasminegraph-prereq ${{secrets.DOCKER_USER}}/jasminegraph-prereq:latest
+        docker push ${{secrets.DOCKER_USER}}/jasminegraph-prereq:latest
+
+    - name: Docker Push PR
+      if: github.event_name == 'pull_request'
+      run: |
+        docker tag jasminegraph-prereq ${{secrets.DOCKER_USER}}/jasminegraph-prereq:v${{github.event.pull_request.number}}-dev
+        docker push ${{secrets.DOCKER_USER}}/jasminegraph-prereq:v${{github.event.pull_request.number}}-dev
