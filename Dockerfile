@@ -103,6 +103,6 @@ WORKDIR /home/ubuntu/software
 RUN apt-get -y install gfortran libopenblas-dev liblapack-dev
 RUN apt-get update
 RUN wget -o requirements.txt https://raw.githubusercontent.com/FYP-Auto-Scale-JasmineGraph/jasminegraph/main/GraphSAGE/requirements
-RUN pip install -r ./GraphSAGE/requirements
+RUN pip install -r ./requirements
 
 CMD ["bash"]
